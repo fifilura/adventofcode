@@ -16,9 +16,6 @@ def calculate_row(row: String): Int = {
   row_seat * 8 + column_seat
 }
 
-val res = for (row <- rows) yield calculate_row(row)
-
-val range = (res.min to res.max).toSet
-
+val res = rows.map(x => calculate_row(x))
 
 println((res.min to res.max).toSet.diff(res.toSet))
