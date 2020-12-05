@@ -1,10 +1,12 @@
 val rows = io.Source.stdin.getLines.toList
 
-def split_passport_iter(rows:List[String], cur_passport:String) : List[String] =
-{
+def split_passport_iter(
+    rows: List[String],
+    cur_passport: String
+): List[String] = {
   if (rows.isEmpty)
     List(cur_passport)
-  else if(rows.head.length == 0)
+  else if (rows.head.length == 0)
     cur_passport :: split_passport_iter(rows.tail, "")
   else
     split_passport_iter(rows.tail, cur_passport + rows.head + " ")
@@ -18,34 +20,36 @@ val ecl_regex = raw"ecl:(?:amb|blu|brn|gry|grn|hzl|oth)".r
 val pid_regex = raw"pid:\d{9}".r
 val yr_regex = raw"(\wyr):(\d{4})".r
 
-def validate(entry:String) : String = {
-    entry match {
-        case hcl_regex() => "hcl"
-        case yr_regex(code, value) => code match {
-            case "eyr" if (2020 to 2030).contains(value.toInt) => "eyr"
-            case "iyr" if (2010 to 2020).contains(value.toInt) => "iyr"
-            case "byr" if (1920 to 2002).contains(value.toInt) => "byr"
-            case x => "invalid"
-        }
-        case hgt_regex(value, unit_type) => unit_type match {
-            case "cm" if (150 to 193).contains(value.toInt) => "hgt"
-            case "in" if (59 to 76).contains(value.toInt) => "hgt"
-            case x => "invalid"
-        }
-        case ecl_regex() => "ecl"
-        case pid_regex() => "pid"
+def validate(entry: String): String = {
+  entry match {
+    case hcl_regex() => "hcl"
+    case yr_regex(code, value) =>
+      code match {
+        case "eyr" if (2020 to 2030).contains(value.toInt) => "eyr"
+        case "iyr" if (2010 to 2020).contains(value.toInt) => "iyr"
+        case "byr" if (1920 to 2002).contains(value.toInt) => "byr"
+        case x                                             => "invalid"
+      }
+    case hgt_regex(value, unit_type) =>
+      unit_type match {
+        case "cm" if (150 to 193).contains(value.toInt) => "hgt"
+        case "in" if (59 to 76).contains(value.toInt)   => "hgt"
+        case x                                          => "invalid"
+      }
+    case ecl_regex() => "ecl"
+    case pid_regex() => "pid"
 
-        case x => "invalid"
-    }
+    case x => "invalid"
+  }
 }
 
-
 val valid_passports = split_passport_iter(rows, "")
-  .map(x => x.split(" ")
-    .map(x => validate(x))
-    .filter(x => required.contains(x))
-    .distinct
-    .length == 7)
-
+  .map(x =>
+    x.split(" ")
+      .map(x => validate(x))
+      .filter(x => required.contains(x))
+      .distinct
+      .length == 7
+  )
 
 println(valid_passports.count(_ == true))
