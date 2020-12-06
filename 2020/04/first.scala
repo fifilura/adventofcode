@@ -1,20 +1,20 @@
 val rows = io.Source.stdin.getLines.toList
 
-def split_passport_iter(
+def splitPassportIter(
     rows: List[String],
-    cur_passport: String
+    curPassport: String
 ): List[String] = {
   if (rows.isEmpty)
-    List(cur_passport)
+    List(curPassport)
   else if (rows.head.length == 0)
-    cur_passport :: split_passport_iter(rows.tail, "")
+    curPassport :: splitPassportIter(rows.tail, "")
   else
-    split_passport_iter(rows.tail, cur_passport + rows.head + " ")
+    splitPassportIter(rows.tail, curPassport + rows.head + " ")
 }
 
 val required = List("ecl", "pid", "eyr", "hcl", "byr", "iyr", "hgt")
 
-val valid_passports = split_passport_iter(rows, "")
+val validPassports = splitPassportIter(rows, "")
   .map(x =>
     x.split(" ")
       .map(x => x.slice(0, 3))
@@ -23,4 +23,4 @@ val valid_passports = split_passport_iter(rows, "")
       .length == 7
   )
 
-println(valid_passports.count(_ == true))
+println(validPassports.count(_ == true))
