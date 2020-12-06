@@ -1,9 +1,5 @@
 val rows = io.Source.stdin.getLines.toList
 
-/* There is a small bug in this code - it requires the input to have two
-blanklines at the very end in order to commit the last group.
-*/
-
 def addCharsInString(m: Map[Char, Int], s: String): Map[Char, Int] = {
   if (s.isEmpty)
     m
@@ -17,11 +13,11 @@ def groupInput(
     personCnt: Int,
     curMap: Map[Char, Int]
 ): List[Int] = {
-  if (rows.isEmpty)
-    Nil
+  if (rows.isEmpty) {
+    List(curMap.filter(_._2 == personCnt).keys.size)
+  }
   else if (rows.head.length == 0) {
-    val numberOfValidCodes = curMap.filter(_._2 == personCnt).keys.size
-    numberOfValidCodes :: groupInput(
+      curMap.filter(_._2 == personCnt).keys.size :: groupInput(
       rows.tail,
       0,
       Map.empty[Char, Int].withDefault(_ => 0)
