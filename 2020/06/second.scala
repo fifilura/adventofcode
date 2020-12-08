@@ -30,12 +30,3 @@ def groupInput(
 val emptyMap: Map[Char, Int] = Map.empty[Char, Int].withDefault(_ => 0)
 val res = groupInput(rows, 0, emptyMap)
 println(res.sum)
-
-
-
-
-
-
-
-
-
