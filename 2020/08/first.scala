@@ -4,7 +4,6 @@ val instr_regex = raw"(nop|acc|jmp) ([+-]\d+)".r
 
 def buildInstructions(
     v: Vector[(String, Int)],
-    cnt: Int,
     instructions: List[String]
 ): Vector[(String, Int)] = {
   if (instructions.isEmpty) {
@@ -13,7 +12,7 @@ def buildInstructions(
     val instr = instructions.head match {
       case instr_regex(i, value) => (i, value.toInt)
     }
-    buildInstructions(v :+ (instr), cnt + 1, instructions.tail)
+    buildInstructions(v :+ (instr), instructions.tail)
   }
 }
 def runVM(
@@ -36,5 +35,5 @@ def runVM(
 }
 
 println(
-  runVM(buildInstructions(Vector.empty[(String, Int)], 0, rows), 0, 0, Set())
+  runVM(buildInstructions(Vector.empty[(String, Int)], rows), 0, 0, Set())
 )
